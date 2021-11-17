@@ -1,0 +1,39 @@
+{
+    "name": "zerosdev/durianpay-php-client",
+    "description": "PHP client library for Durianpay.id",
+    "type": "library",
+    "require": {
+        "php": ">= 7.0.0",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "7.*",
+        "nesbot/carbon": "2.*"
+    },
+    "license": "MIT",
+    "homepage": "https://durianpay.id",
+    "support": {
+        "issues": "https://github.com/zerosdev/durianpay-php-client/issues",
+        "source": "https://github.com/zerosdev/durianpay-php-client"
+    },
+    "authors": [
+        {
+            "name": "Zeros Technology",
+            "email": "admin@zeros.co.id"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "ZerosDev\\Durianpay\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ZerosDev\\Durianpay\\Laravel\\ServiceProvider"
+            ],
+            "aliases": {
+                "Durianpay": "ZerosDev\\Durianpay\\Laravel\\Facade"
+            }
+        }
+    }
+}
