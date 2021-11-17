@@ -40,15 +40,33 @@ class Client
 
 	public function post($endpoint) {
 		$this->setRequestEndpoint($endpoint);
-		$this->setRequestMethod('POST');
+		$this->setRequestMethod(strtoupper(__FUNCTION__));
 		$this->addRequestHeaders('Content-Type', 'application/json');
 
 		try {
-			$response = $this->http->post($endpoint, [
-				'json'	=> $this->getRequestPayload(),
-			])
-			->getBody()
-			->getContents();
+			$response = $this->http->{__FUNCTION__}($endpoint, [
+					'json'	=> $this->getRequestPayload(),
+				])
+				->getBody()
+				->getContents();
+
+		} catch (Exception $e) {
+			$response = $e->getMessage();
+		}
+
+		$this->setResponse($response);
+
+		return $this->getResponse();
+	}
+
+	public function get($endpoint) {
+		$this->setRequestEndpoint($endpoint);
+		$this->setRequestMethod(strtoupper(__FUNCTION__));
+
+		try {
+			$response = $this->http->{__FUNCTION__}($endpoint)
+				->getBody()
+				->getContents();
 
 		} catch (Exception $e) {
 			$response = $e->getMessage();
