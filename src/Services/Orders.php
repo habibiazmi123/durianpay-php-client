@@ -28,9 +28,9 @@ class Orders
 		return $this->client->post('orders');
 	}
 
-	public function fetch(string $id = null) {
-		if ($id) {
-			return $this->client->get('orders/'.$id);
+	public function fetch() {
+		if ($this->getId()) {
+			return $this->client->get('orders/'.$this->getId());
 		}
 
 		$query = http_build_query([

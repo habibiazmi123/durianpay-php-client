@@ -44,9 +44,9 @@ class Payments
 		return $this->client->post('payments/charge');
 	}
 
-	public function fetch(string $id = null) {
-		if ($id) {
-			return $this->client->get('payments/'.$id);
+	public function fetch() {
+		if ($this->getId()) {
+			return $this->client->get('payments/'.$this->getId());
 		}
 
 		$query = http_build_query([
@@ -59,15 +59,24 @@ class Payments
 		return $this->client->get('payments'.($query ? '?'.$query : ''));
 	}
 
-	public function status(string $id) {
-		return $this->client->get('payments/'.$id.'/status');
+	public function status() {
+		if (! $this->getId()) {
+			return false;
+		}
+		return $this->client->get('payments/'.$this->getId().'/status');
 	}
 
-	public function verify(string $id, string $signature) {
-		return $this->client->get('payments/'.$id.'/verify?verification_signature='.$signature);
+	public function verify(string $signature) {
+		if (! $this->getId()) {
+			return false;
+		}
+		return $this->client->get('payments/'.$this->getId().'/verify?verification_signature='.$signature);
 	}
 
-	public function cancel(string $id) {
-		return $this->client->get('payments/'.$id.'/cancel');
+	public function cancel() {
+		if (! $this->getId()) {
+			return false;
+		}
+		return $this->client->get('payments/'.$this->getId().'/cancel');
 	}
 }
