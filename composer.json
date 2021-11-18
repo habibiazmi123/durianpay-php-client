@@ -3,10 +3,9 @@
     "description": "PHP client library for Durianpay.id",
     "type": "library",
     "require": {
-        "php": ">= 7.0.0",
+        "php": ">=7.0.0",
         "ext-json": "*",
-        "guzzlehttp/guzzle": "7.*",
-        "nesbot/carbon": "2.*"
+        "guzzlehttp/guzzle": "^6.5"
     },
     "license": "MIT",
     "homepage": "https://durianpay.id",
