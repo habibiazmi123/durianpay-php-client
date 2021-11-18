@@ -17,8 +17,8 @@ class Orders
 	public function create() {
 		$this->client->setRequestPayload([
 			"amount" => $this->getAmount() ? $this->getAmount().".00" : null,
-			"payment_option" => $this->getPaymentOption(),
-			"currency" => $this->getCurrency(),
+			"payment_option" => $this->getPaymentOption() ?? 'full_payment',
+			"currency" => $this->getCurrency() ?? 'IDR',
 			"order_ref_id" => $this->getOrderRefId(),
 			"customer" => $this->getCustomer(Constant::ARRAY),
 			"items"	=> $this->getItems(Constant::ARRAY),
