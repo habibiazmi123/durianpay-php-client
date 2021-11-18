@@ -12,6 +12,24 @@
 
 ## About
 
+This library gives you an easy way to call DurianPay API in elegant code style. Example :
+
+```php
+Durianpay::orders()->fetch();
+```
+
+```php
+Durianpay::payments()
+    ->setType('VA')
+    ->setRequest(function (Request $request) {
+        $request->setOrderId('ord_JGytr64yGj8')
+            ->setBankCode('XXX')
+            ->setName('Nama Pelanggan')
+            ->setAmount(10000);
+    })
+    ->charge()
+```
+
 ## Installation
 
 ## Usage
