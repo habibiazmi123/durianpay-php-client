@@ -8,75 +8,81 @@ use ZerosDev\Durianpay\Traits\SetterGetter;
 
 class Payments
 {
-	use SetterGetter;
+    use SetterGetter;
 
-	private $type;
-	
-	public function __construct(Client $client) {
-		$this->client = $client;
-	}
+    private $type;
 
-	public function charge() {
-		$payloads = [
-			"type"	=> strtoupper($this->getType()),
-			"request"	=> $this->getRequest(Constant::ARRAY),
-		];
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
 
-		switch ($payloads['type']) {
-			case "VA":
-				if ($this->getRequest()->getBankCode() === "BCA") {
-					$payloads = array_merge($payloads, [
-						"customer_info"	=> $this->getCustomerInfo(Constant::ARRAY)
-					]);
-				}
-				break;
+    public function charge()
+    {
+        $payloads = [
+            "type"	=> strtoupper($this->getType()),
+            "request"	=> $this->getRequest(Constant::ARRAY),
+        ];
 
-			case "ONLINE_BANKING":
-				$payloads = array_merge($payloads, [
-					"customer_info"	=> $this->getCustomerInfo(Constant::ARRAY),
-					"mobile" => $this->getMobile()
-				]);
-				break;
-		}
+        switch ($payloads['type']) {
+            case "VA":
+                if ($this->getRequest()->getBankCode() === "BCA") {
+                    $payloads = array_merge($payloads, [
+                        "customer_info"	=> $this->getCustomerInfo(Constant::ARRAY)
+                    ]);
+                }
+                break;
 
-		$this->client->setRequestPayload($payloads);
-		
-		return $this->client->post('payments/charge');
-	}
+            case "ONLINE_BANKING":
+                $payloads = array_merge($payloads, [
+                    "customer_info"	=> $this->getCustomerInfo(Constant::ARRAY),
+                    "mobile" => $this->getMobile()
+                ]);
+                break;
+        }
 
-	public function fetch() {
-		if ($this->getId()) {
-			return $this->client->get('payments/'.$this->getId());
-		}
+        $this->client->setRequestPayload($payloads);
 
-		$query = http_build_query([
-			'from'	=> $this->getFrom(),
-			'to'	=> $this->getTo(),
-			'skip'	=> $this->getSkip(),
-			'limit'	=> $this->getLimit(),
-		]);
+        return $this->client->post('payments/charge');
+    }
 
-		return $this->client->get('payments'.($query ? '?'.$query : ''));
-	}
+    public function fetch()
+    {
+        if ($this->getId()) {
+            return $this->client->get('payments/'.$this->getId());
+        }
 
-	public function status() {
-		if (! $this->getId()) {
-			return false;
-		}
-		return $this->client->get('payments/'.$this->getId().'/status');
-	}
+        $query = http_build_query([
+            'from'	=> $this->getFrom(),
+            'to'	=> $this->getTo(),
+            'skip'	=> $this->getSkip(),
+            'limit'	=> $this->getLimit(),
+        ]);
 
-	public function verify(string $signature) {
-		if (! $this->getId()) {
-			return false;
-		}
-		return $this->client->get('payments/'.$this->getId().'/verify?verification_signature='.$signature);
-	}
+        return $this->client->get('payments'.($query ? '?'.$query : ''));
+    }
 
-	public function cancel() {
-		if (! $this->getId()) {
-			return false;
-		}
-		return $this->client->get('payments/'.$this->getId().'/cancel');
-	}
+    public function status()
+    {
+        if (! $this->getId()) {
+            return false;
+        }
+        return $this->client->get('payments/'.$this->getId().'/status');
+    }
+
+    public function verify(string $signature)
+    {
+        if (! $this->getId()) {
+            return false;
+        }
+        return $this->client->get('payments/'.$this->getId().'/verify?verification_signature='.$signature);
+    }
+
+    public function cancel()
+    {
+        if (! $this->getId()) {
+            return false;
+        }
+        return $this->client->get('payments/'.$this->getId().'/cancel');
+    }
 }

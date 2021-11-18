@@ -4,11 +4,11 @@ namespace ZerosDev\Durianpay;
 
 class Constant
 {
-	const URL_API = 'https://api.durianpay.id/v1/';
+    public const URL_API = 'https://api.durianpay.id/v1/';
 
-	const ARRAY = "array";
-	const JSON = "json";
-	const XML = "xml";
+    public const ARRAY = "array";
+    public const JSON = "json";
+    public const XML = "xml";
 
-	const ARRAY_MERGE = "array_merge";
+    public const ARRAY_MERGE = "array_merge";
 }

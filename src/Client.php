@@ -10,80 +10,82 @@ use ZerosDev\Durianpay\Traits\SetterGetter;
 
 class Client
 {
-	use SetterGetter;
+    use SetterGetter;
 
-	protected $http;
-	protected $api_key;
-	protected $request_endpoint;
-	protected $request_url;
-	protected $request_method;
-	protected $request_payload = [];
-	protected $request_headers = [];
-	protected $response;
+    protected $http;
+    protected $api_key;
+    protected $request_endpoint;
+    protected $request_url;
+    protected $request_method;
+    protected $request_payload = [];
+    protected $request_headers = [];
+    protected $response;
 
-	public function __construct(string $api_key = null) {
-		$this->setApiKey($api_key);
-		$this->setRequestHeaders([
-			'Authorization'		=> 'Basic '.base64_encode($this->getApiKey().":"),
-			'Accept'			=> 'application/json'
-		]);
-		$self = $this;
-		$this->http = new GuzzleClient([
-			'base_uri'		=> Constant::URL_API,
-			'http_errors' 	=> false,
-			'headers'		=> $this->getRequestHeaders(),
-			'on_stats' => function (TransferStats $s) use (&$self) {
-		        $self->setRequestUrl(strval($s->getEffectiveUri()));
-		    }
-		]);
-	}
+    public function __construct(string $api_key = null)
+    {
+        $this->setApiKey($api_key);
+        $this->setRequestHeaders([
+            'Authorization'		=> 'Basic '.base64_encode($this->getApiKey().":"),
+            'Accept'			=> 'application/json'
+        ]);
+        $self = $this;
+        $this->http = new GuzzleClient([
+            'base_uri'		=> Constant::URL_API,
+            'http_errors' 	=> false,
+            'headers'		=> $this->getRequestHeaders(),
+            'on_stats' => function (TransferStats $s) use (&$self) {
+                $self->setRequestUrl(strval($s->getEffectiveUri()));
+            }
+        ]);
+    }
 
-	public function post($endpoint) {
-		$this->setRequestEndpoint($endpoint);
-		$this->setRequestMethod(strtoupper(__FUNCTION__));
-		$this->addRequestHeaders('Content-Type', 'application/json');
+    public function post($endpoint)
+    {
+        $this->setRequestEndpoint($endpoint);
+        $this->setRequestMethod(strtoupper(__FUNCTION__));
+        $this->addRequestHeaders('Content-Type', 'application/json');
 
-		try {
-			$response = $this->http->{__FUNCTION__}($endpoint, [
-					'json'	=> $this->getRequestPayload(),
-				])
-				->getBody()
-				->getContents();
+        try {
+            $response = $this->http->{__FUNCTION__}($endpoint, [
+                    'json'	=> $this->getRequestPayload(),
+                ])
+                ->getBody()
+                ->getContents();
+        } catch (Exception $e) {
+            $response = $e->getMessage();
+        }
 
-		} catch (Exception $e) {
-			$response = $e->getMessage();
-		}
+        $this->setResponse($response);
 
-		$this->setResponse($response);
+        return $this->getResponse();
+    }
 
-		return $this->getResponse();
-	}
+    public function get($endpoint)
+    {
+        $this->setRequestEndpoint($endpoint);
+        $this->setRequestMethod(strtoupper(__FUNCTION__));
 
-	public function get($endpoint) {
-		$this->setRequestEndpoint($endpoint);
-		$this->setRequestMethod(strtoupper(__FUNCTION__));
+        try {
+            $response = $this->http->{__FUNCTION__}($endpoint)
+                ->getBody()
+                ->getContents();
+        } catch (Exception $e) {
+            $response = $e->getMessage();
+        }
 
-		try {
-			$response = $this->http->{__FUNCTION__}($endpoint)
-				->getBody()
-				->getContents();
+        $this->setResponse($response);
 
-		} catch (Exception $e) {
-			$response = $e->getMessage();
-		}
+        return $this->getResponse();
+    }
 
-		$this->setResponse($response);
-
-		return $this->getResponse();
-	}
-
-	public function debugs() {
-		return [
-			'url'	=> $this->getRequestUrl(),
-			'method' => $this->getRequestMethod(),
-			'payload' => $this->getRequestPayload(),
-			'headers' => $this->getRequestHeaders(),
-			'response' => $this->getResponse(),
-		];
-	}
+    public function debugs()
+    {
+        return [
+            'url'	=> $this->getRequestUrl(),
+            'method' => $this->getRequestMethod(),
+            'payload' => $this->getRequestPayload(),
+            'headers' => $this->getRequestHeaders(),
+            'response' => $this->getResponse(),
+        ];
+    }
 }

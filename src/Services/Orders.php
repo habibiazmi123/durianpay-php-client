@@ -8,38 +8,41 @@ use ZerosDev\Durianpay\Traits\SetterGetter;
 
 class Orders
 {
-	use SetterGetter;
-	
-	public function __construct(Client $client) {
-		$this->client = $client;
-	}
+    use SetterGetter;
 
-	public function create() {
-		$this->client->setRequestPayload([
-			"amount" => $this->getAmount() ? $this->getAmount().".00" : null,
-			"payment_option" => $this->getPaymentOption() ?? 'full_payment',
-			"currency" => $this->getCurrency() ?? 'IDR',
-			"order_ref_id" => $this->getOrderRefId(),
-			"customer" => $this->getCustomer(Constant::ARRAY),
-			"items"	=> $this->getItems(Constant::ARRAY),
-			"metadata" => $this->getMetadata(Constant::ARRAY)
-		]);
-		
-		return $this->client->post('orders');
-	}
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
 
-	public function fetch() {
-		if ($this->getId()) {
-			return $this->client->get('orders/'.$this->getId());
-		}
+    public function create()
+    {
+        $this->client->setRequestPayload([
+            "amount" => $this->getAmount() ? $this->getAmount().".00" : null,
+            "payment_option" => $this->getPaymentOption() ?? 'full_payment',
+            "currency" => $this->getCurrency() ?? 'IDR',
+            "order_ref_id" => $this->getOrderRefId(),
+            "customer" => $this->getCustomer(Constant::ARRAY),
+            "items"	=> $this->getItems(Constant::ARRAY),
+            "metadata" => $this->getMetadata(Constant::ARRAY)
+        ]);
 
-		$query = http_build_query([
-			'from'	=> $this->getFrom(),
-			'to'	=> $this->getTo(),
-			'skip'	=> $this->getSkip(),
-			'limit'	=> $this->getLimit(),
-		]);
+        return $this->client->post('orders');
+    }
 
-		return $this->client->get('orders'.($query ? '?'.$query : ''));
-	}
+    public function fetch()
+    {
+        if ($this->getId()) {
+            return $this->client->get('orders/'.$this->getId());
+        }
+
+        $query = http_build_query([
+            'from'	=> $this->getFrom(),
+            'to'	=> $this->getTo(),
+            'skip'	=> $this->getSkip(),
+            'limit'	=> $this->getLimit(),
+        ]);
+
+        return $this->client->get('orders'.($query ? '?'.$query : ''));
+    }
 }

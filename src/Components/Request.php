@@ -6,9 +6,9 @@ use ZerosDev\Durianpay\Traits\SetterGetter;
 
 class Request
 {
-	use SetterGetter;
+    use SetterGetter;
 
-	public function __construct() {
-
-	}
+    public function __construct()
+    {
+    }
 }

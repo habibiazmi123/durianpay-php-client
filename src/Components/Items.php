@@ -7,22 +7,24 @@ use ZerosDev\Durianpay\Traits\SetterGetter;
 
 class Items
 {
-	use SetterGetter;
+    use SetterGetter;
 
-	public function __construct() {
-		
-	}
+    public function __construct()
+    {
+    }
 
-	public function add($name, $price, $quantity, $logoUrl) {
-		$this->addItems([
-			'name' => $name,
-			'price' => $price.".00",
-			'qty' => $quantity,
-			'logo' => $logoUrl
-		]);
-	}
+    public function add($name, $price, $quantity, $logoUrl)
+    {
+        $this->addItems([
+            'name' => $name,
+            'price' => $price.".00",
+            'qty' => $quantity,
+            'logo' => $logoUrl
+        ]);
+    }
 
-	public function toArray() {
-		return $this->getItems();
-	}
+    public function toArray()
+    {
+        return $this->getItems();
+    }
 }

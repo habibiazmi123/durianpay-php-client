@@ -7,9 +7,9 @@ use ZerosDev\Durianpay\Traits\SetterGetter;
 
 class Customer
 {
-	use SetterGetter;
+    use SetterGetter;
 
-	public function __construct() {
-		
-	}
+    public function __construct()
+    {
+    }
 }
