@@ -39,6 +39,11 @@ class Client
         ]);
     }
 
+    public function instance()
+    {
+        return $this;
+    }
+
     public function request($endpoint, $method = 'GET')
     {
         $method = strtolower($method);
