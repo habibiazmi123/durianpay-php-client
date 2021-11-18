@@ -17,7 +17,7 @@ class Items
     {
         $this->addItems([
             'name' => $name,
-            'price' => $price.".00",
+            'price' => strval($price),
             'qty' => $quantity,
             'logo' => $logoUrl
         ]);

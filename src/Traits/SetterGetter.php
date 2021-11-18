@@ -41,7 +41,9 @@ trait SetterGetter
                     $args[0]($object);
                     $this->{$property} = $object;
                 } else {
-                    $this->{$property} = $args[0];
+                    $this->{$property} = ($property === 'amount')
+                        ? strval($args[0])
+                        : $args[0];
                 }
             }
             return $this;
@@ -112,16 +114,10 @@ trait SetterGetter
         return get_object_vars($this);
     }
 
-    public function publicProperties()
-    {
-        return (new ReflectionObject($this))
-            ->getProperties(ReflectionProperty::IS_PUBLIC);
-    }
-
     public function toArray()
     {
         $properties = [];
-        foreach ($this->publicProperties() as $name => $value) {
+        foreach ($this->properties() as $name => $value) {
             if (! is_object($value)) {
                 $properties[$name] = $value;
             } else {

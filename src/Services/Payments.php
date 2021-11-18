@@ -43,7 +43,7 @@ class Payments
 
         $this->client->setRequestPayload($payloads);
 
-        return $this->client->post('payments/charge');
+        return $this->client->request('payments/charge', 'POST');
     }
 
     public function fetch()
@@ -59,7 +59,7 @@ class Payments
             'limit'	=> $this->getLimit(),
         ]);
 
-        return $this->client->get('payments'.($query ? '?'.$query : ''));
+        return $this->client->request('payments'.($query ? '?'.$query : ''));
     }
 
     public function status()
@@ -67,7 +67,7 @@ class Payments
         if (! $this->getId()) {
             return false;
         }
-        return $this->client->get('payments/'.$this->getId().'/status');
+        return $this->client->request('payments/'.$this->getId().'/status');
     }
 
     public function verify(string $signature)
@@ -75,7 +75,7 @@ class Payments
         if (! $this->getId()) {
             return false;
         }
-        return $this->client->get('payments/'.$this->getId().'/verify?verification_signature='.$signature);
+        return $this->client->request('payments/'.$this->getId().'/verify?verification_signature='.$signature);
     }
 
     public function cancel()
@@ -83,6 +83,6 @@ class Payments
         if (! $this->getId()) {
             return false;
         }
-        return $this->client->get('payments/'.$this->getId().'/cancel');
+        return $this->client->request('payments/'.$this->getId().'/cancel');
     }
 }

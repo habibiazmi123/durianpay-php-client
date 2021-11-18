@@ -3,9 +3,9 @@
 namespace ZerosDev\Durianpay;
 
 use Exception;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\TransferStats;
 use Carbon\Carbon;
+use GuzzleHttp\TransferStats;
+use GuzzleHttp\Client as GuzzleClient;
 use ZerosDev\Durianpay\Traits\SetterGetter;
 
 class Client
@@ -39,34 +39,24 @@ class Client
         ]);
     }
 
-    public function post($endpoint)
+    public function request($endpoint, $method = 'GET')
     {
-        $this->setRequestEndpoint($endpoint);
-        $this->setRequestMethod(strtoupper(__FUNCTION__));
-        $this->addRequestHeaders('Content-Type', 'application/json');
+        $method = strtolower($method);
 
-        try {
-            $response = $this->http->{__FUNCTION__}($endpoint, [
-                    'json'	=> $this->getRequestPayload(),
-                ])
-                ->getBody()
-                ->getContents();
-        } catch (Exception $e) {
-            $response = $e->getMessage();
+        $this->setRequestEndpoint($endpoint);
+        $this->setRequestMethod(strtoupper($method));
+
+        $options = [];
+
+        switch ($this->getRequestMethod()) {
+            case "POST":
+                $this->addRequestHeaders('Content-Type', 'application/json');
+                $options['json'] = $this->getRequestPayload();
+                break;
         }
 
-        $this->setResponse($response);
-
-        return $this->getResponse();
-    }
-
-    public function get($endpoint)
-    {
-        $this->setRequestEndpoint($endpoint);
-        $this->setRequestMethod(strtoupper(__FUNCTION__));
-
         try {
-            $response = $this->http->{__FUNCTION__}($endpoint)
+            $response = $this->http->{$method}($endpoint, $options)
                 ->getBody()
                 ->getContents();
         } catch (Exception $e) {

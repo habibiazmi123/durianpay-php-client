@@ -18,7 +18,7 @@ $client = new Client($apiKey);
  * Make an order
  * */
 
-$client->orders()
+$order = $client->orders()
     ->setAmount(10000)
     ->setPaymentOption('full_payment')
     ->setCurrency('IDR')
@@ -41,23 +41,23 @@ $client->orders()
  * Fetch all orders
  * */
 
-$client->orders()->fetch();
+$orders = $client->orders()->fetch();
 
 /**
  * Fetch an order by id
  * */
 
-$client->orders()->setId('ord_JGytr64yGj8')->fetch();
+$fetch = $client->orders()->setId('ord_JGytr64yGj8')->fetch();
 
 /**
  * Charge a payment/create payment code
  * */
 
-$client->payments()
+$charge = $client->payments()
     ->setType('VA')
     ->setRequest(function (Request $request) {
         $request->setOrderId('ord_JGytr64yGj8')
-            ->setType('BRI')
+            ->setBankCode('BRI')
             ->setName('Nama')
             ->setAmount(10000);
     })
@@ -67,10 +67,10 @@ $client->payments()
  * Fetch all payments
  **/
 
-$client->payments()->fetch();
+$payments = $client->payments()->fetch();
 
 /**
  * Fetch payment by id
  **/
 
-$client->payments()->setId('pay_JGytr64yGj8')->fetch();
+$fetch = $client->payments()->setId('pay_JGytr64yGj8')->fetch();

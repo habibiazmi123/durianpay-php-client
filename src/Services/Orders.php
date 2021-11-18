@@ -18,7 +18,7 @@ class Orders
     public function create()
     {
         $this->client->setRequestPayload([
-            "amount" => $this->getAmount() ? $this->getAmount().".00" : null,
+            "amount" => $this->getAmount(),
             "payment_option" => $this->getPaymentOption() ?? 'full_payment',
             "currency" => $this->getCurrency() ?? 'IDR',
             "order_ref_id" => $this->getOrderRefId(),
@@ -27,7 +27,7 @@ class Orders
             "metadata" => $this->getMetadata(Constant::ARRAY)
         ]);
 
-        return $this->client->post('orders');
+        return $this->client->request('orders', 'POST');
     }
 
     public function fetch()
@@ -43,6 +43,6 @@ class Orders
             'limit'	=> $this->getLimit(),
         ]);
 
-        return $this->client->get('orders'.($query ? '?'.$query : ''));
+        return $this->client->request('orders'.($query ? '?'.$query : ''));
     }
 }
