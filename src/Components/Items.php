@@ -13,7 +13,7 @@ class Items
     {
     }
 
-    public function add($name, $price, $quantity, $logoUrl)
+    public function add($name, $price, $quantity, $logoUrl = null)
     {
         $this->addItems([
             'name' => $name,
