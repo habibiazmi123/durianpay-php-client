@@ -11,6 +11,7 @@ class Payments
     use SetterGetter;
 
     private $type;
+    private $client;
 
     public function __construct(Client $client)
     {
@@ -21,35 +22,40 @@ class Payments
     {
         $payloads = [
             "type"	=> strtoupper($this->getType()),
-            "request"	=> $this->getRequest(Constant::ARRAY),
         ];
+
+        if ($request = $this->getRequest()) {
+            $payload['request'] = $request->toArray();
+        }
 
         switch ($payloads['type']) {
             case "VA":
-                if ($this->getRequest()->getBankCode() === "BCA") {
-                    $payloads = array_merge($payloads, [
-                        "customer_info"	=> $this->getCustomerInfo(Constant::ARRAY)
-                    ]);
+                if (
+                    is_object($request)
+                    && ($request->getBankCode() === "BCA")
+                    && ($customer_info = $this->getCustomerInfo())
+                ) {
+                    $payloads['customer_info'] = $customer_info->toArray();
                 }
                 break;
 
             case "ONLINE_BANKING":
-                $payloads = array_merge($payloads, [
-                    "customer_info"	=> $this->getCustomerInfo(Constant::ARRAY),
-                    "mobile" => $this->getMobile()
-                ]);
+                if ($customer_info = $this->getCustomerInfo()) {
+                    $payloads['customer_info'] = $customer_info->toArray();
+                }
+                $payloads['mobile'] = $this->getMobile();
                 break;
         }
 
         $this->client->setRequestPayload($payloads);
 
-        return $this->client->request('payments/charge', 'POST');
+        return $this->client->request('payments/charge', 'POST', Constant::CONTENT_JSON);
     }
 
     public function fetch()
     {
         if ($this->getId()) {
-            return $this->client->get('payments/'.$this->getId());
+            return $this->client->request('payments/'.$this->getId());
         }
 
         $query = http_build_query([

@@ -34,9 +34,13 @@ trait SetterGetter
                     $binding = $params[0];
                     $class = $binding->getClass();
                     $class = $class ? $class->getName() : "";
-                    if (! preg_match('/^'.preg_quote($baseNamespace.'\\Components\\').'/is', $class)) {
+
+                    if (
+                        !preg_match('/^'.preg_quote($baseNamespace.'\\Components\\').'/is', $class)
+                    ) {
                         throw new InvalidArgumentException('Parameter $'.$binding->getName().' passed to '.get_called_class().'::'.$method.'(function(...)) must be type hint of component class');
                     }
+
                     $object = new $class();
                     $args[0]($object);
                     $this->{$property} = $object;
@@ -48,39 +52,16 @@ trait SetterGetter
             }
             return $this;
         } elseif ($type === "get") {
-            if (property_exists($this, $property)) {
-                if (! isset($args[0]) || ! is_object($this->{$property})) {
-                    return $this->{$property};
-                }
-
-                switch ($args[0]) {
-                    case Constant::ARRAY:
-                        if (! method_exists($this->{$property}, 'toArray')) {
-                            throw new BadMethodCallException('Call to undefined method '.get_class($this->{$property}).'::toArray()');
-                        }
-                        return $this->{$property}->toArray();
-                        break;
-
-                    case Constant::JSON:
-                        if (! method_exists($this->{$property}, 'toJson')) {
-                            throw new BadMethodCallException('Call to undefined method '.get_class($this->{$property}).'::toJson()');
-                        }
-                        return $this->{$property}->toJson();
-                        break;
-
-                    default:
-                        throw new InvalidArgumentException('Unsupported serialization method passed to '.get_called_class().'::'.$method.'()');
-                        break;
-                }
-            }
-            return null;
+            return property_exists($this, $property)
+                    ? $this->{$property}
+                    : (isset($args[0]) ? $args[0] : null);
         } elseif ($type === "add") {
             if (! property_exists($this, $property)) {
                 $this->{$property} = [];
             }
 
             if (is_array($args[0])) {
-                if (isset($args[1]) && $args[1] === Constant::ARRAY_MERGE) {
+                if (isset($args[1]) && $args[1] === Constant::MERGE) {
                     $this->{$property} = array_merge($this->{$property}, $args[0]);
                 } else {
                     $this->{$property}[] = $args[0];
@@ -103,9 +84,6 @@ trait SetterGetter
 
     public function __get(string $property)
     {
-        if (property_exists($this, $property)) {
-            return $this->{$property};
-        }
         return null;
     }
 

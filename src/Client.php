@@ -44,7 +44,7 @@ class Client
         return $this;
     }
 
-    public function request($endpoint, $method = 'GET')
+    public function request($endpoint, $method = 'GET', $content_type = Constant::CONTENT_FORM)
     {
         $method = strtolower($method);
 
@@ -55,8 +55,15 @@ class Client
 
         switch ($this->getRequestMethod()) {
             case "POST":
-                $this->addRequestHeaders('Content-Type', 'application/json');
-                $options['json'] = $this->getRequestPayload();
+                $this->addRequestHeaders('Content-Type', $content_type);
+                switch ($content_type) {
+                    case Constant::CONTENT_JSON:
+                        $options['json'] = $this->getRequestPayload();
+                        break;
+                    case Constant::CONTENT_FORM:
+                        $options['form_params'] = $this->getRequestPayload();
+                        break;
+                }
                 break;
         }
 
