@@ -25,7 +25,7 @@ class Payments
         ];
 
         if ($request = $this->getRequest()) {
-            $payload['request'] = $request->toArray();
+            $payloads['request'] = $request->toArray();
         }
 
         switch ($payloads['type']) {
