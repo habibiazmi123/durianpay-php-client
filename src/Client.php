@@ -34,7 +34,7 @@ class Client
     public function useCredential(string $api_key = null)
     {
         $this->init($api_key);
-        
+
         return $this;
     }
 
