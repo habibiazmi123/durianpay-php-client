@@ -17,7 +17,8 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
     public function register()
     {
         $this->app->singleton(Client::class, function ($app) {
-            return new Client(config('durianpay.api_key'));
+            $api_key = (string) config('durianpay.credentials.default.api_key');
+            return new Client($api_key);
         });
     }
 

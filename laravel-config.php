@@ -1,10 +1,11 @@
 <?php
 
 return [
-
-    /**
-     * API Key
-     */
-    'api_key'     => env('DURIANPAY_API_KEY', ''),
+    
+    'credentials'       => [
+        'default'   => [
+            'api_key'     => env('DURIANPAY_API_KEY', ''),
+        ],
+    ],
 
 ];

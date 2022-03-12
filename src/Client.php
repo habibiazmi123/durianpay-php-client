@@ -23,7 +23,25 @@ class Client
 
     public function __construct(string $api_key = null)
     {
+        $this->init($api_key);
+    }
+
+    public function instance()
+    {
+        return $this;
+    }
+
+    public function useCredential(string $api_key = null)
+    {
+        $this->init($api_key);
+        
+        return $this;
+    }
+
+    private function init(string $api_key)
+    {
         $this->setApiKey($api_key);
+
         $this->setRequestHeaders([
             'Authorization'		=> 'Basic '.base64_encode($this->getApiKey().":"),
             'Accept'			=> 'application/json'
@@ -37,11 +55,6 @@ class Client
                 $self->setRequestUrl(strval($s->getEffectiveUri()));
             }
         ]);
-    }
-
-    public function instance()
-    {
-        return $this;
     }
 
     public function request($endpoint, $method = 'GET', $content_type = Constant::CONTENT_FORM)
