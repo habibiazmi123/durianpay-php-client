@@ -34,16 +34,13 @@ Durianpay::payments()
 1. Run command
 <pre><code>composer require zerosdev/durianpay-php-client</code></pre>
 
-2. Run command
-<pre><code>composer dump-autoload</code></pre>
-
 ### The following steps only needed if you are using Laravel
 
-3. Then
+2. Then
 <pre><code>php artisan vendor:publish --provider="ZerosDev\Durianpay\Laravel\ServiceProvider"</code></pre>
 
-4. Edit **config/durianpay.php** and put your API credentials
-    
+3. Edit **config/durianpay.php** and put your API credentials
+
 ## Usage
 
 ### Laravel
