@@ -11,8 +11,9 @@ use ZerosDev\Durianpay\Components\Metadata;
 use ZerosDev\Durianpay\Components\Request;
 
 $apiKey = "your_api_key_here";
+$mode = "development"; // "development" or "production"
 
-$client = new Client($apiKey);
+$client = new Client($apiKey, $mode);
 
 /**
  * Make an order
@@ -44,33 +45,7 @@ $order = $client->orders()
 $orders = $client->orders()->fetch();
 
 /**
- * Fetch an order by id
+ * Fetch single order by id
  * */
 
 $fetch = $client->orders()->setId('ord_JGytr64yGj8')->fetch();
-
-/**
- * Charge a payment/create payment code
- * */
-
-$charge = $client->payments()
-    ->setType('VA')
-    ->setRequest(function (Request $request) {
-        $request->setOrderId('ord_JGytr64yGj8')
-            ->setBankCode('BRI')
-            ->setName('Nama')
-            ->setAmount(10000);
-    })
-    ->charge();
-
-/**
- * Fetch all payments
- **/
-
-$payments = $client->payments()->fetch();
-
-/**
- * Fetch payment by id
- **/
-
-$fetch = $client->payments()->setId('pay_JGytr64yGj8')->fetch();
