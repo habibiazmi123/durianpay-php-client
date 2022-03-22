@@ -18,7 +18,8 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
     {
         $this->app->singleton(Client::class, function ($app) {
             $api_key = (string) config('durianpay.credentials.default.api_key');
-            return new Client($api_key);
+            $mode = (string) config('durianpay.credentials.default.mode');
+            return new Client($api_key, $mode);
         });
     }
 
