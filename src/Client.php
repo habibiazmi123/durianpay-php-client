@@ -14,6 +14,7 @@ class Client
 
     protected $http;
     protected $api_key;
+    protected $mode;
     protected $request_endpoint;
     protected $request_url;
     protected $request_method;
@@ -21,9 +22,9 @@ class Client
     protected $request_headers = [];
     protected $response;
 
-    public function __construct(string $api_key = null)
+    public function __construct(string $api_key = null, string $mode = 'production')
     {
-        $this->init($api_key);
+        $this->init($api_key, $mode);
     }
 
     public function instance()
@@ -31,21 +32,23 @@ class Client
         return $this;
     }
 
-    public function useCredential(string $api_key = null)
+    public function useCredential(string $api_key = null, string $mode = 'production')
     {
-        $this->init($api_key);
+        $this->init($api_key, $mode);
 
         return $this;
     }
 
-    private function init(string $api_key)
+    private function init(string $api_key, string $mode)
     {
         $this->setApiKey($api_key);
+        $this->setMode($mode);
 
         $this->setRequestHeaders([
             'Authorization'		=> 'Basic '.base64_encode($this->getApiKey().":"),
             'Accept'			=> 'application/json'
         ]);
+
         $self = $this;
         $this->http = new GuzzleClient([
             'base_uri'		=> Constant::URL_API,
@@ -96,6 +99,7 @@ class Client
     public function debugs()
     {
         return [
+            'mode' => $this->getMode(),
             'url'	=> $this->getRequestUrl(),
             'method' => $this->getRequestMethod(),
             'payload' => $this->getRequestPayload(),
