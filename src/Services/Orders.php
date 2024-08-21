@@ -38,6 +38,10 @@ class Orders
             $payload['metadata'] = $metadata->toArray();
         }
 
+        if ($expiryDate = $this->getExpiryDate()) {
+            $payload['expiry_date'] = $expiryDate;
+        }
+
         $this->client->setRequestPayload($payload);
 
         return $this->client->request('orders', 'POST', Constant::CONTENT_JSON);
