@@ -1,5 +1,5 @@
 {
-    "name": "zerosdev/durianpay-php-client",
+    "name": "habibiazmi123/durianpay-php-client",
     "description": "PHP client library for Durianpay.id",
     "type": "library",
     "require": {
