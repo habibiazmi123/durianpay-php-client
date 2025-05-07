@@ -22,9 +22,9 @@ class Client
     protected $request_headers = [];
     protected $response;
 
-    public function __construct(string $api_key = null, string $mode = 'production')
+    public function __construct(?string $base_url = null, ?string $api_key = null, string $mode = 'production')
     {
-        $this->init($api_key, $mode);
+        $this->init($base_url, $api_key, $mode);
     }
 
     public function instance()
@@ -32,28 +32,28 @@ class Client
         return $this;
     }
 
-    public function useCredential(string $api_key = null, string $mode = 'production')
+    public function useCredential(?string $base_url = null, ?string $api_key = null, string $mode = 'production')
     {
-        $this->init($api_key, $mode);
+        $this->init($base_url, $api_key, $mode);
 
         return $this;
     }
 
-    private function init(string $api_key, string $mode)
+    private function init(string $base_url, string $api_key, string $mode)
     {
         $this->setApiKey($api_key);
         $this->setMode($mode);
 
         $this->setRequestHeaders([
-            'Authorization'		=> 'Basic '.base64_encode($this->getApiKey().":"),
-            'Accept'			=> 'application/json'
+            'Authorization'        => 'Basic ' . base64_encode($this->getApiKey() . ":"),
+            'Accept'            => 'application/json'
         ]);
 
         $self = $this;
         $this->http = new GuzzleClient([
-            'base_uri'		=> Constant::URL_API,
-            'http_errors' 	=> false,
-            'headers'		=> $this->getRequestHeaders(),
+            'base_uri'        => $base_url,
+            'http_errors'     => false,
+            'headers'        => $this->getRequestHeaders(),
             'on_stats' => function (TransferStats $s) use (&$self) {
                 $self->setRequestUrl(strval($s->getEffectiveUri()));
             }
@@ -100,7 +100,7 @@ class Client
     {
         return [
             'mode' => $this->getMode(),
-            'url'	=> $this->getRequestUrl(),
+            'url'    => $this->getRequestUrl(),
             'method' => $this->getRequestMethod(),
             'payload' => $this->getRequestPayload(),
             'headers' => $this->getRequestHeaders(),

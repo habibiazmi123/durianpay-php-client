@@ -17,9 +17,10 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
     public function register()
     {
         $this->app->singleton(Client::class, function ($app) {
+            $base_url = (string) config('durianpay.credentials.default.base_url');
             $api_key = (string) config('durianpay.credentials.default.api_key');
             $mode = (string) config('durianpay.credentials.default.mode');
-            return new Client($api_key, $mode);
+            return new Client($base_url, $api_key, $mode);
         });
     }
 
@@ -31,7 +32,7 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../../laravel-config.php' => config_path('durianpay.php'),
+            __DIR__ . '/../../laravel-config.php' => config_path('durianpay.php'),
         ]);
     }
 
